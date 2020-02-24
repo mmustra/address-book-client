@@ -1,0 +1,243 @@
+<nz-layout fxLayout="row" fxLayoutAlign="center">
+  <nz-content
+    fxFlex.gt-lg="15%"
+    fxFlex.gt-md="20%"
+    fxFlex.md="30%"
+    fxFlex.sm="40%"
+    fxFlex.lt-sm="90%"
+  >
+    <div class="authenticate-container" fxLayout="column">
+      <!-- Header -->
+      <div class="header" fxLayout="row" fxLayoutAlign="center">
+        <h1>Address Book</h1>
+      </div>
+
+      <nz-tabset (nzSelectedIndexChange)="tabChange($event)">
+        <!-- Login -->
+        <nz-tab nzTitle="Login">
+          <form nz-form [formGroup]="loginForm" (keyup.enter)="submit()">
+            <nz-form-item>
+              <nz-form-control nzErrorTip="Please input your email!">
+                <nz-input-group nzPrefixIcon="mail">
+                  <input
+                    type="text"
+                    nz-input
+                    formControlName="email"
+                    placeholder="Email"
+                  />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+            <nz-form-item>
+              <nz-form-control nzErrorTip="Please input your Password!">
+                <nz-input-group nzPrefixIcon="lock">
+                  <input
+                    type="password"
+                    nz-input
+                    formControlName="password"
+                    placeholder="Password"
+                  />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+
+          <nz-collapse [nzBordered]="false" class="demo-users">
+            <nz-collapse-panel nzHeader="Quick login">
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <i
+                  nz-icon
+                  nz-tooltip
+                  [nzTitle]="demoAdminTooltip"
+                  nzOverlayClassName="tooltip-content"
+                  nzType="question-circle"
+                  nzTheme="outline"
+                ></i>
+                <ng-template #demoAdminTooltip>
+                  <div fxLayout="column">
+                    <h4>Users</h4>
+                    <p>
+                      Can read, update, delete any user.<br />Can read, update
+                      own user.
+                    </p>
+                    <h4>Contacts</h4>
+                    <p>
+                      Can read, update, delete any contact.<br />Can create,
+                      read, update, delete own contact.
+                    </p>
+                  </div>
+                </ng-template>
+                <button nz-button fxFlex (click)="quickLogin(Role.Admin)">
+                  Admin
+                </button>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <i
+                  nz-icon
+                  nz-tooltip
+                  [nzTitle]="demoModeratorTooltip"
+                  nzOverlayClassName="tooltip-content"
+                  nzType="question-circle"
+                  nzTheme="outline"
+                ></i>
+                <ng-template #demoModeratorTooltip>
+                  <div fxLayout="column">
+                    <h4>Users</h4>
+                    <p>
+                      Can read any (except admin) user.
+                    </p>
+                    <h4>Contacts</h4>
+                    <p>
+                      Can read, update any (except admin) contact.<br />Can
+                      create, read, update, delete own contact.
+                    </p>
+                  </div>
+                </ng-template>
+                <button nz-button fxFlex (click)="quickLogin(Role.Moderator)">
+                  Moderator
+                </button>
+              </div>
+              <div fxLayout="row" fxLayoutAlign="start center">
+                <i
+                  nz-icon
+                  nz-tooltip
+                  [nzTitle]="demoUserTooltip"
+                  nzOverlayClassName="tooltip-content"
+                  nzType="question-circle"
+                  nzTheme="outline"
+                ></i>
+                <ng-template #demoUserTooltip>
+                  <div fxLayout="column">
+                    <h4>Users</h4>
+                    <p>
+                      N/A
+                    </p>
+                    <h4>Contacts</h4>
+                    <p>
+                      Can create, read, update, delete own contact.
+                    </p>
+                  </div> </ng-template
+                ><button nz-button fxFlex (click)="quickLogin(Role.User)">
+                  User
+                </button>
+              </div>
+            </nz-collapse-panel>
+          </nz-collapse>
+        </nz-tab>
+
+        <!-- Register -->
+        <nz-tab nzTitle="Register">
+          <form nz-form [formGroup]="registerForm" (keyup.enter)="submit()">
+            <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+              <nz-form-item fxFlex>
+                <nz-form-control [nzErrorTip]="firstNameError">
+                  <nz-input-group nzPrefixIcon="profile">
+                    <input
+                      nz-input
+                      formControlName="firstName"
+                      placeholder="First Name"
+                    />
+                  </nz-input-group>
+                </nz-form-control>
+                <ng-template #firstNameError let-control>
+                  <ng-container *ngIf="control.hasError('required')">
+                    First name is required!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">
+                    Minimum 3 characthers!
+                  </ng-container>
+                </ng-template>
+              </nz-form-item>
+
+              <nz-form-item fxFlex>
+                <nz-form-control [nzErrorTip]="lastNameError">
+                  <nz-input-group nzPrefixIcon="profile">
+                    <input
+                      nz-input
+                      formControlName="lastName"
+                      placeholder="Last Name"
+                    />
+                  </nz-input-group>
+                </nz-form-control>
+                <ng-template #lastNameError let-control>
+                  <ng-container *ngIf="control.hasError('required')">
+                    Last name is required!
+                  </ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">
+                    Minimum 3 characthers!
+                  </ng-container>
+                </ng-template>
+              </nz-form-item>
+            </div>
+
+            <nz-form-item>
+              <nz-form-control nzErrorTip="Input is not valid E-mail!">
+                <nz-input-group nzPrefixIcon="mail">
+                  <input nz-input formControlName="email" placeholder="Email" />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+
+            <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+              <nz-form-item fxFlex>
+                <nz-form-control nzErrorTip="Input password!">
+                  <nz-input-group nzPrefixIcon="lock">
+                    <input
+                      nz-input
+                      type="password"
+                      formControlName="password"
+                      placeholder="Password"
+                      (ngModelChange)="updateConfirmValidator()"
+                    />
+                  </nz-input-group>
+                </nz-form-control>
+              </nz-form-item>
+              <nz-form-item fxFlex>
+                <nz-form-control [nzErrorTip]="errorTpl">
+                  <nz-input-group nzPrefixIcon="lock">
+                    <input
+                      nz-input
+                      type="password"
+                      formControlName="passwordCheck"
+                      placeholder="Confirm Password"
+                    />
+                  </nz-input-group>
+                  <ng-template #errorTpl let-control>
+                    <ng-container *ngIf="control.hasError('required')">
+                      Confirm password!
+                    </ng-container>
+                    <ng-container *ngIf="control.hasError('confirm')">
+                      Password inconsistent!
+                    </ng-container>
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <nz-form-item>
+              <nz-form-control>
+                <nz-input-group nzPrefixIcon="picture">
+                  <input
+                    nz-input
+                    formControlName="avatarUrl"
+                    placeholder="Avatar URL"
+                  />
+                </nz-input-group>
+              </nz-form-control>
+            </nz-form-item>
+          </form>
+        </nz-tab>
+      </nz-tabset>
+
+      <button
+        nz-button
+        class="login-form-button"
+        [nzType]="'primary'"
+        [nzLoading]="isLoading"
+        (click)="submit()"
+      >
+        Submit
+      </button>
+    </div>
+  </nz-content>
+</nz-layout>

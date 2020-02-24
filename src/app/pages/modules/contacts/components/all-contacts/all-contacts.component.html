@@ -1,0 +1,171 @@
+<div
+  class="all-contacts-container"
+  fxLayout="column"
+  fxLayoutAlign="start center"
+>
+  <!-- Actions -->
+  <div
+    class="actions"
+    fxLayout.gt-xs="row"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign="space-between"
+    fxLayoutGap="20px"
+    fxFill
+  >
+    <div
+      fxLayout="row"
+      fxLayoutAlign="start center"
+      fxFlex.gt-sm="35%"
+      fxFlex.sm="45%"
+      fxFlex.lt-sm="100%"
+    >
+      <app-search
+        [display]="textSearch"
+        [minChars]="3"
+        (search)="searchText($event)"
+      ></app-search>
+      <label
+        *ngxPermissionsOnly="Permission.ContactsSearchAllOption"
+        nz-checkbox
+        [(ngModel)]="allContactsOption"
+        (ngModelChange)="changeAllContactsOption()"
+        nz-tooltip
+        nzTooltipTitle="Will include contacts from all users"
+        >All</label
+      >
+    </div>
+
+    <a nz-button nzType="primary" [routerLink]="['/contacts', 'new']">
+      <i nz-icon nzType="plus" nzTheme="outline"></i>New
+    </a>
+  </div>
+
+  <!-- No data message -->
+  <div *ngIf="isLoading && !contacts?.length">
+    <nz-spin></nz-spin>
+  </div>
+  <nz-empty
+    *ngIf="!isLoading && !contacts?.length"
+    [nzNotFoundImage]="simpleEmptyImage | safeUrl"
+  ></nz-empty>
+
+  <!-- Contacts -->
+  <div
+    class="cards"
+    fxLayout="row wrap"
+    fxLayoutGap="20px"
+    fxFill
+    *ngIf="contacts?.length"
+  >
+    <nz-card
+      fxFlex.gt-sm="calc(33.33% - 20px)"
+      fxFlex.sm="calc(50% - 10px)"
+      fxFlex.lt-sm="100%"
+      [nzTitle]="avatarTemplate"
+      [nzExtra]="actionsTemplate"
+      *ngFor="let contact of contacts"
+    >
+      <nz-skeleton [nzLoading]="isLoading" [nzActive]="true">
+        <nz-descriptions [nzColumn]="1">
+          <nz-descriptions-item nzTitle="Phone" [nzSpan]="1">{{
+            contact.phones[0] || '-'
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Email" [nzSpan]="1">{{
+            contact.emails[0] || '-'
+          }}</nz-descriptions-item>
+          <nz-descriptions-item nzTitle="Notes" [nzSpan]="1"
+            ><p nz-paragraph nzEllipsis nzEllipsisRows="2">
+              {{ contact.notes || '-' }}
+            </p></nz-descriptions-item
+          >
+        </nz-descriptions>
+      </nz-skeleton>
+
+      <ng-template #actionsTemplate>
+        <i
+          *ngIf="!isLoading && actionsLoadingSet.has(contact.id)"
+          nz-icon
+          nzType="loading"
+          nzTheme="outline"
+        ></i>
+        <a
+          *ngIf="!isLoading && !actionsLoadingSet.has(contact.id)"
+          nz-dropdown
+          nzTrigger="click"
+          [nzDropdownMenu]="menu"
+        >
+          <i nz-icon nzType="setting" nzTheme="outline"></i>
+        </a>
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item (click)="editContact(contact)">
+              <i nz-icon nzType="edit" nzTheme="outline"></i>Edit
+            </li>
+            <li
+              nz-menu-item
+              (click)="deleteContact(contact)"
+              [nzDisabled]="profile.id !== contact.userId && !canDeleteContact"
+            >
+              <i nz-icon nzType="delete" nzTheme="outline"></i>Delete
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+      </ng-template>
+
+      <ng-template #avatarTemplate>
+        <div fxLayout="row" fxLayoutAlign="start center" class="header">
+          <nz-skeleton
+            [nzLoading]="isLoading"
+            [nzActive]="true"
+            [nzAvatar]="true"
+            [nzParagraph]="{ rows: 0 }"
+            fxLayout="row"
+            fxLayoutAlign="start center"
+            class="header"
+          >
+            <nz-badge
+              [nzDot]="profile.id !== contact.userId"
+              nz-tooltip
+              nzTooltipTitle="Owned by: {{ contact.user.fullName }}"
+              [nzTooltipTrigger]="
+                profile.id !== contact.userId ? 'hover' : 'null'
+              "
+            >
+              <nz-avatar
+                [nzSrc]="avatarsMap.get(contact.id).src"
+                [nzText]="avatarsMap.get(contact.id).text"
+                [ngStyle]="{
+                  'background-color': avatarsMap.get(contact.id).color
+                }"
+              ></nz-avatar>
+            </nz-badge>
+            <h4 nz-title nzEllipsis>{{ contact.fullName }}</h4>
+          </nz-skeleton>
+        </div>
+      </ng-template>
+    </nz-card>
+  </div>
+
+  <!-- Pagination -->
+  <nz-pagination
+    fxHide.lt-sm
+    fxShow.gt-xs
+    *ngIf="contacts?.length"
+    [nzPageIndex]="query?.page"
+    [nzTotal]="query?.totalPages * query?.limit"
+    nzShowSizeChanger
+    [nzPageSize]="query?.limit"
+    [nzPageSizeOptions]="paginationLimitOptions"
+    (nzPageIndexChange)="changePageNumber($event)"
+    (nzPageSizeChange)="changePageSize($event)"
+  ></nz-pagination>
+
+  <nz-pagination
+    fxHide.gt-xs
+    [nzPageSize]="query?.limit"
+    [nzPageIndex]="query?.page"
+    [nzTotal]="query?.totalPages * query?.limit"
+    nzSimple
+    (nzPageIndexChange)="changePageNumber($event)"
+  ></nz-pagination>
+</div>

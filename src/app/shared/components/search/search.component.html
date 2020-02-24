@@ -1,0 +1,39 @@
+<div class="search-container">
+  <div
+    fxLayout="row"
+    fxFlex="100%"
+    fxLayoutGap="10px"
+    fxLayoutAlign="center center"
+  >
+    <i
+      *ngIf="minChars > 1"
+      nz-icon
+      nz-tooltip
+      nzTitle="Minimum {{ minChars }} characters"
+      nzType="question-circle"
+      nzTheme="outline"
+    ></i>
+    <nz-input-group [nzSuffix]="suffixIconSearch">
+      <input
+        #searchInput
+        [(ngModel)]="text"
+        (keyup.escape)="clearTextSearch()"
+        type="text"
+        nz-input
+        [placeholder]="placeholder"
+      />
+    </nz-input-group>
+    <ng-template #suffixIconSearch>
+      <i *ngIf="!text" nz-icon nzType="search"></i>
+      <i
+        *ngIf="text"
+        nz-icon
+        nz-tooltip
+        class="ant-input-clear-icon"
+        nzTheme="fill"
+        nzType="close-circle"
+        (click)="clearTextSearch()"
+      ></i>
+    </ng-template>
+  </div>
+</div>

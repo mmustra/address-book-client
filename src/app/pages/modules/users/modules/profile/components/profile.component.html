@@ -1,0 +1,208 @@
+<nz-card [ngClass]="{ 'no-background': editMode }">
+  <nz-page-header>
+    <!--avatar-->
+    <nz-avatar
+      nz-page-header-avatar
+      [nzSrc]="avatar.src"
+      [nzText]="avatar.text"
+      [ngStyle]="{ 'background-color': avatar.color }"
+    >
+    </nz-avatar>
+
+    <!--title-->
+    <nz-page-header-title>{{
+      (profile$ | async).fullName
+    }}</nz-page-header-title>
+
+    <!--actions desktop-->
+    <nz-page-header-extra fxHide.lt-sm>
+      <button
+        *ngIf="!editMode"
+        nz-button
+        nzType="primary"
+        (click)="editMode = true"
+      >
+        Edit
+      </button>
+      <button
+        *ngIf="editMode"
+        nz-button
+        nzType="defult"
+        (click)="cancel()"
+        [disabled]="isProcessing"
+      >
+        Cancel
+      </button>
+      <button
+        *ngIf="editMode"
+        nz-button
+        nzType="primary"
+        (click)="update()"
+        [nzLoading]="isProcessing"
+      >
+        Save
+      </button>
+    </nz-page-header-extra>
+
+    <nz-page-header-content [ngClass.lt-sm]="'compact'" fxLayout="column">
+      <!--content display-->
+      <nz-descriptions [nzColumn]="1" *ngIf="!editMode">
+        <nz-descriptions-item nzTitle="Role" [nzSpan]="1"
+          ><nz-tag>{{
+            ((profile$ | async)?.roles)[0]
+          }}</nz-tag></nz-descriptions-item
+        >
+        <nz-descriptions-item nzTitle="Email" [nzSpan]="1">{{
+          (profile$ | async).email
+        }}</nz-descriptions-item>
+        <nz-descriptions-item nzTitle="Contacts Count" [nzSpan]="1">{{
+          (profile$ | async).contactsCount
+        }}</nz-descriptions-item>
+      </nz-descriptions>
+
+      <!--content edit-->
+      <form
+        *ngIf="editMode"
+        nz-form
+        [formGroup]="profileForm"
+        (keyup.enter)="update()"
+        (keyup.escape)="cancel()"
+      >
+        <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+          <nz-form-item fxFlex>
+            <nz-form-label nzRequired nzFor="firstName"
+              >First Name</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="firstNameError">
+              <input nz-input formControlName="firstName" id="firstName" />
+            </nz-form-control>
+            <ng-template #firstNameError let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                First name is required!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                Minimum 3 characthers!
+              </ng-container>
+            </ng-template>
+          </nz-form-item>
+          <nz-form-item fxFlex>
+            <nz-form-label nzRequired nzFor="lastName">Last Name</nz-form-label>
+            <nz-form-control [nzErrorTip]="lastNameError">
+              <input nz-input formControlName="lastName" id="lastName" />
+            </nz-form-control>
+            <ng-template #lastNameError let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                Last name is required!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                Minimum 3 characthers!
+              </ng-container>
+            </ng-template>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <nz-form-label nzRequired nzFor="email">E-mail</nz-form-label>
+          <nz-form-control nzErrorTip="Input is not valid E-mail!">
+            <input nz-input formControlName="email" id="email" />
+          </nz-form-control>
+        </nz-form-item>
+
+        <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+          <nz-form-item fxFlex>
+            <nz-form-label nzFor="password" nzRequired>Password</nz-form-label>
+            <nz-form-control nzErrorTip="Please input your password!">
+              <input
+                nz-input
+                type="password"
+                id="password"
+                formControlName="password"
+                (ngModelChange)="updateConfirmValidator()"
+              />
+            </nz-form-control>
+          </nz-form-item>
+
+          <nz-form-item fxFlex>
+            <nz-form-label nzFor="passwordCheck" nzRequired
+              >Confirm Password</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="errorTpl">
+              <input
+                nz-input
+                type="password"
+                formControlName="passwordCheck"
+                id="passwordCheck"
+              />
+              <ng-template #errorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">
+                  Please confirm your password!
+                </ng-container>
+                <ng-container *ngIf="control.hasError('confirm')">
+                  Password inconsistent!
+                </ng-container>
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <nz-form-label nzFor="avatarUrl">
+            <span>
+              Avatar
+              <i
+                nz-icon
+                nz-tooltip
+                nzTitle="This should be URL"
+                nzType="question-circle"
+                nzTheme="outline"
+              ></i>
+            </span>
+          </nz-form-label>
+          <nz-form-control>
+            <input nz-input id="avatarUrl" formControlName="avatarUrl" />
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+
+      <!--actions mobile-->
+      <div
+        fxLayoutGap="20px"
+        fxFlex
+        fxHide.gt-xs
+        class="actions"
+        [ngClass]="{ edit: editMode }"
+        ngClass.lt-sm="mobile"
+      >
+        <button
+          *ngIf="!editMode"
+          fxFlex
+          nz-button
+          nzType="primary"
+          (click)="editMode = true"
+        >
+          Edit
+        </button>
+        <button
+          *ngIf="editMode"
+          fxFlex
+          nz-button
+          nzType="defult"
+          (click)="cancel()"
+          [disabled]="isProcessing"
+        >
+          Cancel
+        </button>
+        <button
+          *ngIf="editMode"
+          fxFlex
+          nz-button
+          nzType="primary"
+          (click)="update()"
+          [nzLoading]="isProcessing"
+        >
+          Save
+        </button>
+      </div>
+    </nz-page-header-content>
+  </nz-page-header>
+</nz-card>

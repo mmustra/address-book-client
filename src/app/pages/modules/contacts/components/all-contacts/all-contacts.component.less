@@ -1,0 +1,93 @@
+@import '../../../../../../styles.less';
+
+.all-contacts-container {
+  .enableAnimation(input);
+
+  nz-spin {
+    margin: 25px 0;
+  }
+
+  nz-empty {
+    margin: 48px 0;
+    color: @disabled-color;
+
+    ::ng-deep .ant-empty-image {
+      max-height: 40px;
+    }
+  }
+
+  .actions {
+    padding: 0 20px 20px 20px;
+
+    label {
+      margin-left: 20px;
+      min-width: 48px;
+    }
+  }
+
+  .cards {
+    nz-card {
+      max-width: calc(33.33%);
+      min-height: 289px;
+      margin-bottom: 20px;
+
+      .header {
+        h4 {
+          margin: 0 0 0 10px;
+        }
+
+        ::ng-deep nz-skeleton {
+          .ant-skeleton-content {
+            ul {
+              display: none;
+            }
+          }
+        }
+      }
+
+      ::ng-deep .ant-descriptions-item {
+        padding-bottom: 10px;
+
+        .ant-descriptions-item-label {
+          color: @text-color;
+          font-weight: bold;
+        }
+
+        .ant-descriptions-item-content {
+          line-height: 1rem;
+          width: 100%;
+
+          p {
+            margin: 0;
+          }
+        }
+      }
+    }
+  }
+
+  nz-pagination {
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+}
+
+@sm-break: calc(@screen-sm + 23px);
+@lg-break: calc(@screen-lg - 33px);
+
+@media only screen and (min-width: 0px) and (max-width: @sm-break) {
+  .all-contacts-container .cards nz-card {
+    margin-right: 0 !important;
+  }
+}
+
+@media only screen and (min-width: calc(@sm-break + 1px)) and (max-width: @lg-break) {
+  .all-contacts-container .cards nz-card:nth-child(2n) {
+    margin-right: 0 !important;
+  }
+}
+
+@media only screen and (min-width: calc(@lg-break + 1px)) {
+  .all-contacts-container .cards nz-card:nth-child(3n) {
+    margin-right: 0 !important;
+  }
+}

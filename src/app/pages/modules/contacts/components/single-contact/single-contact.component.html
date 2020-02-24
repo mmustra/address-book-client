@@ -1,0 +1,246 @@
+<div
+  class="single-contact-container"
+  fxLayout="row wrap"
+  fxLayoutAlign="center"
+>
+  <!-- Actions -->
+  <div
+    class="actions"
+    fxLayout="row"
+    fxLayoutAlign="end"
+    fxLayoutGap="20px"
+    fxFill
+    fxHide.lt-sm
+  >
+    <button
+      fxFlex.lt-sm="50%"
+      nz-button
+      nzType="defult"
+      (click)="cancel()"
+      [disabled]="isProcessing"
+    >
+      Cancel
+    </button>
+    <button
+      fxFlex.lt-sm="50%"
+      nz-button
+      nzType="primary"
+      (click)="save()"
+      [nzLoading]="isProcessing"
+    >
+      Save
+    </button>
+  </div>
+
+  <form
+    fxLayout="row"
+    fxLayoutGap="20px"
+    fxLayout.lt-sm="column"
+    fxFill
+    nz-form
+    [formGroup]="contactForm"
+  >
+    <!-- General details -->
+    <nz-card
+      class="details"
+      fxFlex.gt-sm="60%"
+      fxFlex.sm="50%"
+      fxFlex.lt-sm="100%"
+    >
+      <nz-spin [nzSpinning]="isProcessing">
+        <div fxLayout="row" fxLayoutAlign="start center" class="header">
+          <nz-badge
+            [nzDot]="contact && profile.id !== contact?.userId"
+            nz-tooltip
+            nzTooltipTitle="Owned by: {{ contact?.user.fullName }}"
+          >
+            <nz-avatar
+              [nzSrc]="avatar.src"
+              [nzText]="avatar.text"
+              [ngStyle]="{ 'background-color': avatar.color }"
+            >
+            </nz-avatar>
+          </nz-badge>
+          <div fxLayout="column" class="text">
+            <div *ngIf="contact">
+              <h4 nz-title nzEllipsis>{{ contact?.fullName }}</h4>
+              <div fxHide.lt-md>
+                <span nz-text nzType="secondary"
+                  >created: {{ contact?.createdAt | date
+                  }}<nz-divider nzType="vertical"></nz-divider>updated:
+                  {{ contact?.updatedAt | date }}</span
+                >
+              </div>
+              <div fxLayout="column" fxHide fxShow.lt-md>
+                <span>created: {{ contact?.createdAt | date }}</span>
+                <span>updated: {{ contact?.updatedAt | date }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+          <nz-form-item fxFlex>
+            <nz-form-label nzRequired nzFor="firstName"
+              >First Name</nz-form-label
+            >
+            <nz-form-control [nzErrorTip]="firstNameError">
+              <input nz-input formControlName="firstName" id="firstName" />
+            </nz-form-control>
+            <ng-template #firstNameError let-control>
+              <ng-container *ngIf="control.hasError('required')">
+                First name is required!
+              </ng-container>
+              <ng-container *ngIf="control.hasError('minlength')">
+                Minimum 3 characthers!
+              </ng-container>
+            </ng-template>
+          </nz-form-item>
+
+          <nz-form-item fxFlex>
+            <nz-form-label nzFor="lastName">Last Name</nz-form-label>
+            <nz-form-control>
+              <input nz-input formControlName="lastName" id="lastName" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+
+        <nz-form-item>
+          <nz-form-label>Comment</nz-form-label>
+          <nz-form-control>
+            <textarea formControlName="notes" nz-input rows="4"></textarea>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item>
+          <nz-form-label nzFor="avatarUrl">
+            <span>
+              Avatar
+              <i
+                nz-icon
+                nz-tooltip
+                nzTitle="This should be URL"
+                nzType="question-circle"
+                nzTheme="outline"
+              ></i>
+            </span>
+          </nz-form-label>
+          <nz-form-control>
+            <input nz-input id="avatarUrl" formControlName="avatarUrl" />
+          </nz-form-control>
+        </nz-form-item>
+      </nz-spin>
+    </nz-card>
+
+    <!-- Phones and emails -->
+    <nz-card
+      class="phones-emails"
+      fxFlex.gt-sm="40%"
+      fxFlex.sm="50%"
+      fxFlex.lt-sm="100%"
+    >
+      <nz-spin [nzSpinning]="isProcessing">
+        <nz-tabset>
+          <nz-tab nzTitle="Phones">
+            <p nz-paragraph>Edit user phones:</p>
+            <div formArrayName="phones" fxLayout="column">
+              <div class="controls-container" ngClass.sm="mobile">
+                <nz-form-item
+                  #phoneElemControls
+                  *ngFor="let phone of formPhones.controls; index as i"
+                >
+                  <nz-form-control nzErrorTip="Input is not valid phone!">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <input nz-input [formControlName]="i" id="phone{{ i }}" />
+                      <i
+                        nz-icon
+                        nzType="minus-circle-o"
+                        class="remove-control"
+                        (click)="removeControl(formPhones, i)"
+                      ></i>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div fxFlex>
+                <button
+                  nz-button
+                  nzType="dashed"
+                  fxFlex
+                  (click)="addControl(formPhones)"
+                >
+                  <i nz-icon nzType="plus"></i>
+                  New Phone
+                </button>
+              </div>
+            </div>
+          </nz-tab>
+          <nz-tab nzTitle="Emails">
+            <p nz-paragraph>Edit user emails:</p>
+            <div formArrayName="emails" fxLayout="column">
+              <div class="controls-container">
+                <nz-form-item
+                  #emailElemControls
+                  *ngFor="let email of formEmails.controls; index as i"
+                >
+                  <nz-form-control nzErrorTip="Input is not valid E-mail!">
+                    <div fxLayout="row" fxLayoutAlign="center center">
+                      <input nz-input [formControlName]="i" id="email{{ i }}" />
+                      <i
+                        nz-icon
+                        nzType="minus-circle-o"
+                        class="remove-control"
+                        (click)="removeControl(formEmails, i)"
+                      ></i>
+                    </div>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div fxFlex>
+                <button
+                  nz-button
+                  nzType="dashed"
+                  fxFlex
+                  (click)="addControl(formEmails)"
+                >
+                  <i nz-icon nzType="plus"></i>
+                  New Email
+                </button>
+              </div>
+            </div>
+          </nz-tab>
+        </nz-tabset>
+      </nz-spin>
+    </nz-card>
+  </form>
+
+  <!-- Mobile Actions -->
+  <div
+    class="mobile-actions"
+    fxLayout="row"
+    fxLayoutAlign="end"
+    fxLayoutGap="20px"
+    fxFill
+    fxShow.lt-sm
+    fxHide.gt-xs
+  >
+    <button
+      fxFlex.lt-sm="50%"
+      nz-button
+      nzType="defult"
+      (click)="cancel()"
+      [disabled]="isProcessing"
+    >
+      Cancel
+    </button>
+    <button
+      fxFlex.lt-sm="50%"
+      nz-button
+      nzType="primary"
+      (click)="save()"
+      [nzLoading]="isProcessing"
+    >
+      Save
+    </button>
+  </div>
+</div>

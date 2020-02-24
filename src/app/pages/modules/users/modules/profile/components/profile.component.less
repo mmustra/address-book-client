@@ -1,0 +1,43 @@
+nz-card {
+  background-image: url('/assets/profile-background.jpg');
+
+  &.no-background {
+    background-image: unset;
+  }
+
+  background-size: cover;
+  background-position-y: 50%;
+
+  nz-page-header-content {
+    margin-left: 44px;
+
+    nz-descriptions {
+      ::ng-deep td {
+        padding-bottom: 0;
+      }
+    }
+
+    form {
+      > nz-form-item:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &.compact {
+      margin-left: 0;
+
+      .actions {
+        margin-top: 18px;
+
+        &.edit {
+          margin-top: 0px;
+        }
+
+        &.mobile {
+          margin-top: 26px;
+          margin-bottom: 5px;
+        }
+      }
+    }
+  }
+}

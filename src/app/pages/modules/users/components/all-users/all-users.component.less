@@ -1,0 +1,51 @@
+@import '../../../../../../styles.less';
+
+.all-users-container {
+  .enableAnimation(input);
+
+  nz-spin {
+    margin: 25px 0;
+  }
+
+  .actions {
+    padding: 0 20px 20px 20px;
+  }
+
+  nz-list-item {
+    ::ng-deep nz-statistic {
+      * {
+        font-size: 14px;
+      }
+
+      .ant-statistic-content {
+        flex-direction: row;
+        box-sizing: border-box;
+        display: flex;
+      }
+    }
+
+    ::ng-deep ul.ant-list-item-action {
+      li {
+        padding: 0;
+
+        .user-actions {
+          cursor: default;
+          min-width: 132px;
+
+          nz-tag {
+            min-width: 100px;
+          }
+        }
+      }
+    }
+  }
+
+  nz-select {
+    width: 100px;
+  }
+
+  nz-pagination {
+    margin-top: 18px;
+    margin-bottom: 20px;
+  }
+}

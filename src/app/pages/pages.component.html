@@ -1,0 +1,50 @@
+<nz-layout fxLayout="row" fxLayoutAlign="center">
+  <nz-content
+    fxFlex.gt-lg="60%"
+    fxFlex.gt-md="80%"
+    fxFlex.md="90%"
+    fxFlex.lt-md="100%"
+  >
+    <div class="header" fxLayout="row" fxLayoutAlign="space-between center">
+      <h1 nz-title>Address Book</h1>
+      <button
+        nz-button
+        nzType="default"
+        nzShape="circle"
+        nz-tooltip
+        nzTooltipTitle="Log out"
+        (click)="logout()"
+      >
+        <i nz-icon nzType="logout"></i>
+      </button>
+    </div>
+
+    <app-profile></app-profile>
+
+    <ul nz-menu nzMode="horizontal">
+      <li nz-menu-item nzMatchRouter>
+        <a [routerLink]="['/contacts']">
+          <i nz-icon nzType="book"></i>
+          Contacts
+        </a>
+      </li>
+      <li nz-menu-item nzMatchRouter *ngxPermissionsOnly="Permission.UsersPage">
+        <a [routerLink]="['/users']">
+          <i nz-icon nzType="user"></i>
+          Users
+        </a>
+      </li>
+    </ul>
+
+    <div class="content-title" fxLayout="row">
+      <button nz-button nzType="link" *ngIf="!isRootRoute" (click)="goBack()">
+        <i nz-icon nzType="arrow-left" nzTheme="outline"></i>
+      </button>
+      <h4 nz-title>{{ contentTitle }}</h4>
+    </div>
+
+    <nz-card class="content">
+      <router-outlet></router-outlet>
+    </nz-card>
+  </nz-content>
+</nz-layout>

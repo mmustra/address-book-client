@@ -1,0 +1,59 @@
+@import '../../../../styles.less';
+
+nz-layout {
+  min-height: 100vh;
+  nz-content {
+    min-height: 100vh;
+
+    .authenticate-container {
+      .header {
+        margin-top: 20px;
+      }
+
+      form {
+        > nz-form-item:last-child {
+          margin-bottom: 28px;
+        }
+      }
+
+      .demo-users {
+        margin-bottom: 32px;
+
+        nz-collapse-panel {
+          border-radius: 4px;
+          background: @background-color-base;
+          border: 1px solid @border-color-base;
+
+          ::ng-deep .ant-collapse-header {
+            color: @text-color;
+            font-weight: bold;
+            text-align: center;
+            padding: 4px 45px 4px 45px;
+          }
+
+          div {
+            margin-bottom: 10px;
+
+            &:last-child {
+              margin-bottom: 0;
+            }
+
+            i {
+              margin-right: 15px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+::ng-deep .ant-tooltip-content {
+  h4 {
+    color: @tooltip-color !important;
+  }
+
+  p {
+    color: darken(@tooltip-color, 15%) !important;
+  }
+}

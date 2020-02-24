@@ -1,0 +1,160 @@
+<div class="all-users-container" fxLayout="column" fxLayoutAlign="start center">
+  <!-- Actions -->
+  <div
+    class="actions"
+    fxLayout.gt-xs="row"
+    fxLayout.lt-sm="column"
+    fxLayoutAlign="space-between"
+    fxLayoutGap="20px"
+    fxFill
+  >
+    <app-search
+      fxFlex.gt-sm="25%"
+      fxFlex.sm="40%"
+      fxFlex.lt-sm="100%"
+      [display]="textSearch"
+      [minChars]="3"
+      (search)="searchText($event)"
+    ></app-search>
+  </div>
+
+  <!-- No data message -->
+  <div *ngIf="isLoading && !users?.length">
+    <nz-spin></nz-spin>
+  </div>
+
+  <!-- All Users -->
+  <nz-list
+    *ngIf="!isLoading || users?.length"
+    [nzDataSource]="users"
+    [nzItemLayout]="'horizontal'"
+    [nzRenderItem]="user"
+    fxFill
+  >
+    <ng-template #user let-user>
+      <nz-skeleton
+        [nzAvatar]="true"
+        [nzActive]="true"
+        [nzTitle]="false"
+        [nzLoading]="isLoading"
+      >
+        <nz-list-item
+          fxLayout="row"
+          fxLayoutAlign.lt-sm="end"
+          *ngIf="profile.id !== user.id"
+          [nzActions]="[actions]"
+          [nzExtra]="extra"
+        >
+          <ng-template #actions>
+            <div class="user-actions" fxLayout="row" fxLayoutAlign="center">
+              <div *ngxPermissionsOnly="Permission.UsersEditActions">
+                <i
+                  *ngIf="actionsLoadingSet.has(user.id)"
+                  nz-icon
+                  nzType="loading"
+                  nzTheme="outline"
+                ></i>
+                <nz-select
+                  *ngIf="!actionsLoadingSet.has(user.id)"
+                  [ngModel]="selectedRoleMap.get(user.id)"
+                  (ngModelChange)="
+                    selectedRoleMap.set(user.id, $event);
+                    changeRole(user, $event)
+                  "
+                  nzSize="small"
+                >
+                  <nz-option
+                    *ngFor="let role of roles"
+                    [nzValue]="role"
+                    [nzLabel]="role"
+                  ></nz-option></nz-select
+                ><button
+                  *ngIf="!actionsLoadingSet.has(user.id)"
+                  nz-button
+                  nzType="link"
+                  nz-popconfirm
+                  nzPopconfirmTitle="Are you sure, this will also delete their contacts?"
+                  nzPopconfirmPlacement="topRight"
+                  (nzOnConfirm)="deleteUser(user)"
+                >
+                  <i nz-icon nzType="delete" nzTheme="outline"></i>
+                </button>
+              </div>
+              <div *ngxPermissionsExcept="Permission.UsersEditActions">
+                <nz-tag>{{ user.roles[0] }}</nz-tag>
+              </div>
+            </div>
+          </ng-template>
+          <nz-list-item-meta
+            [nzTitle]="user.fullName"
+            [nzAvatar]="avatar"
+            [nzDescription]="userDetails"
+          >
+            <ng-template #avatar>
+              <nz-avatar
+                [nzSrc]="avatarsMap.get(user.id).src"
+                [nzText]="avatarsMap.get(user.id).text"
+                [ngStyle]="{
+                  'background-color': avatarsMap.get(user.id).color
+                }"
+              ></nz-avatar>
+            </ng-template>
+            <ng-template #userDetails>
+              <div class="details">
+                <div fxHide.lt-md>
+                  <span>
+                    {{ user.email
+                    }}<nz-divider nzType="vertical"></nz-divider>created:
+                    {{ user.createdAt | date
+                    }}<nz-divider nzType="vertical"></nz-divider>updated:
+                    {{ user.updatedAt | date }}
+                  </span>
+                </div>
+                <div fxLayout="column" fxHide fxShow.lt-md>
+                  <span>{{ user.email }}</span>
+                  <span>created: {{ user.createdAt | date }}</span>
+                  <span>updated: {{ user.updatedAt | date }}</span>
+                </div>
+              </div>
+            </ng-template>
+            <ng-template #extra>
+              <div>
+                <nz-statistic
+                  [nzValue]="user.contactsCount | number"
+                  [nzTitle]="'Contacts'"
+                  [nzPrefix]="contactsIcon"
+                ></nz-statistic>
+                <ng-template #contactsIcon
+                  ><i nz-icon nzType="book" nzTheme="outline"></i
+                ></ng-template>
+              </div>
+            </ng-template>
+          </nz-list-item-meta>
+        </nz-list-item>
+      </nz-skeleton>
+    </ng-template>
+  </nz-list>
+
+  <!-- Pagination -->
+  <nz-pagination
+    fxHide.lt-sm
+    fxShow.gt-xs
+    *ngIf="users?.length"
+    [nzPageIndex]="query?.page"
+    [nzTotal]="query?.totalPages * query?.limit"
+    nzShowSizeChanger
+    [nzPageSize]="query?.limit"
+    [nzPageSizeOptions]="paginationLimitOptions"
+    (nzPageIndexChange)="changePageNumber($event)"
+    (nzPageSizeChange)="changePageSize($event)"
+  ></nz-pagination>
+
+  <nz-pagination
+    fxHide.gt-xs
+    [nzPageSize]="query?.limit"
+    [nzPageIndex]="query?.page"
+    [nzTotal]="query?.totalPages * query?.limit"
+    nzSimple
+    (nzPageIndexChange)="changePageNumber($event)"
+  ></nz-pagination>
+</div>
