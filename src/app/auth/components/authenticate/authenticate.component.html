@@ -17,7 +17,7 @@
         <nz-tab nzTitle="Login">
           <form nz-form [formGroup]="loginForm" (keyup.enter)="submit()">
             <nz-form-item>
-              <nz-form-control nzErrorTip="Please input your email!">
+              <nz-form-control nzErrorTip="E-mail is not valid!">
                 <nz-input-group nzPrefixIcon="mail">
                   <input
                     type="text"
@@ -29,7 +29,7 @@
               </nz-form-control>
             </nz-form-item>
             <nz-form-item>
-              <nz-form-control nzErrorTip="Please input your Password!">
+              <nz-form-control nzErrorTip="Password is required!">
                 <nz-input-group nzPrefixIcon="lock">
                   <input
                     type="password"
@@ -128,7 +128,11 @@
         <!-- Register -->
         <nz-tab nzTitle="Register">
           <form nz-form [formGroup]="registerForm" (keyup.enter)="submit()">
-            <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+            <div
+              fxLayout.gt-xs="row"
+              fxLayout.xs="column"
+              fxLayoutGap.gt-xs="20px"
+            >
               <nz-form-item fxFlex>
                 <nz-form-control [nzErrorTip]="firstNameError">
                   <nz-input-group nzPrefixIcon="profile">
@@ -171,16 +175,20 @@
             </div>
 
             <nz-form-item>
-              <nz-form-control nzErrorTip="Input is not valid E-mail!">
+              <nz-form-control nzErrorTip="E-mail is not valid!">
                 <nz-input-group nzPrefixIcon="mail">
                   <input nz-input formControlName="email" placeholder="Email" />
                 </nz-input-group>
               </nz-form-control>
             </nz-form-item>
 
-            <div fxLayout.gt-xs="row" fxLayout.xs="column" fxLayoutGap="20px">
+            <div
+              fxLayout.gt-xs="row"
+              fxLayout.xs="column"
+              fxLayoutGap.gt-xs="20px"
+            >
               <nz-form-item fxFlex>
-                <nz-form-control nzErrorTip="Input password!">
+                <nz-form-control nzErrorTip="Password is required!">
                   <nz-input-group nzPrefixIcon="lock">
                     <input
                       nz-input
@@ -231,7 +239,7 @@
 
       <button
         nz-button
-        class="login-form-button"
+        class="submit"
         [nzType]="'primary'"
         [nzLoading]="isLoading"
         (click)="submit()"
