@@ -31,7 +31,7 @@
     "@ngxs/devtools-plugin": "^3.6.2",
     "@ngxs/storage-plugin": "^3.6.2",
     "@ngxs/store": "^3.6.2",
-    "immer": "^4.0.0",
+    "immer": "^8.0.1",
     "lodash": "^4.17.15",
     "ng-zorro-antd": "^8.5.2",
     "ngx-permissions": "^7.0.3",
