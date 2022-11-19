@@ -26,7 +26,7 @@
     "@angular/platform-browser": "~8.2.7",
     "@angular/platform-browser-dynamic": "~8.2.7",
     "@angular/router": "~8.2.7",
-    "@angular-devkit/build-angular": "~0.803.5",
+    "@angular-devkit/build-angular": "~15.0.0",
     "@ngxs-labs/immer-adapter": "^3.0.5",
     "@ngxs/devtools-plugin": "^3.6.2",
     "@ngxs/storage-plugin": "^3.6.2",
