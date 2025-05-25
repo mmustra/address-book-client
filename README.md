@@ -1,6 +1,6 @@
 # Address Book Client
 
-This is client part of Address Book project which allows you to manage contacts. [See it in action.](https://mmustra-address-book.herokuapp.com)
+This is client part of Address Book project which allows you to manage contacts.
 
 <p align="center">
   <img src="./resources/demo.png">
@@ -22,8 +22,6 @@ This is client part of Address Book project which allows you to manage contacts.
 - [Development](#development)
 
 ## About <a name="about"></a>
-
-TLDR: [Address Book DEMO](https://mmustra-address-book.herokuapp.com)
 
 Web app with simple and clean design usable on desktop as well on mobile devices. Different roles give different access privileges with frontend guards (disabled/hidden elements) as well with backend guards (error messages). For more info about the api, check out [server part](https://github.com/mmustra/address-book-server) built with NestJS and MongoDB.
 
